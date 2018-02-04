@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="./jr-qrcode.js"></script>
+    <script>
+/**
+ * @param {String} logoSrc logo的图片地址
+ * @param {String} codeSrc 要生成的二维码地址 
+ * @param {String} elementNode 把生成的图片插入哪个元素里面最前面
+ * @return {*}
+ */
+        var logo = {
+            imgWidth: 200,
+            imgHeight: 200,
+            logoWidth: 50,
+            logoHeight: 50,
+            elementNode: '',
+            qrcode: function (logoSrc,codeSrc,elementNode, imgWidth, imgHeight, logoWidth, logoHeight) {
+                var imgWidth=imgWidth||this.imgWidth,imgHeight=imgHeight||this.imgHeight,logoWidth=logoWidth||this.logoWidth,logoHeight=logoHeight||this.logoHeight;
+                var img = new Image,
+                    imgCode = new Image,
+                    logo = new Image,
+                canvas = document.createElement("canvas"),
+                    ctx = canvas.getContext("2d"),
+                    src = logoSrc;
+                var code = jrQrcode.getQrBase64(codeSrc, {
+                    width: imgWidth,
+                    height: imgHeight,
+                    padding: 0
+                })
+                canvas.width = imgWidth;
+                canvas.height = imgHeight;
+                img.crossOrigin = "Anonymous";
+                img.src = src;
+                imgCode.src = code;
+                img.onload = function () {
+                    ctx.drawImage(imgCode, 0, 0);
+                    ctx.drawImage(img, (imgWidth - logoWidth) / 2, (imgHeight - logoHeight) / 2, logoWidth,
+                        logoHeight);
+                    logo.src = canvas.toDataURL("image/png");
+                    elementNode.appendChild(logo);
+                }
+            }
+        }
+        var logoSrc='http://localhost:3000/1.png';
+        var codeSrc='http://www.baidu.com';
+        logo.qrcode(logoSrc,codeSrc,document.body)
+    </script>
+</body>
+
+</html>
